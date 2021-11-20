@@ -26,7 +26,7 @@ public class TestsHeckathon {
     public static final String NAME = "Test";
     public static final String LAST_NAME = "Hackathon";
     //Před každým spuštěním testu vložit unikátní NEW_EMAIL
-    public static final String NEW_EMAIL = "i@i.cz";
+    public static final String NEW_EMAIL = "k@k.cz";
     public static final String FIRST_NAME_REG = "Adam";
     public static final String LAST_NAME_REG = "Adams";
     public static final String PASSWORD_REG = "12345";
@@ -131,8 +131,14 @@ public class TestsHeckathon {
         enterDatesForSearchingRoom(HOTEL_NAME, CHECK_IN_DATE, CHECK_OUT_DATE);
         chooseRoom(ROOM_NAME);
         proceedToCheckout();
-        loginAfterCheckout(EMAIL,PASSWORD);
+        loginAfterCheckout(NEW_EMAIL,PASSWORD);
         fillInAddress(NAME,LAST_NAME,ADDRESS, CITY, ZIP_CODE, HOME_PHONE, MOBILE_PHONE, ADDRESS_TITLE);
+        payment();
+        wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//p[contains(@class,'alert')]")));
+        WebElement orderConfirmation = browser.findElement(By.xpath("//p[contains(@class,'alert')]"));
+
+        Assertions.assertEquals("Your order on Czechitas DA Hackathon is complete.", orderConfirmation.getText());
+        logOut();
 
     }
 
@@ -234,28 +240,31 @@ public class TestsHeckathon {
             buttonSignIn.click();
             wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//h1[contains(text(),'Your addresses')]")));
     }
-    public void fillInAddress (String firstName, String lastName, String address, String city, int zipCode, long homePhone, long mobilePhone, String addressTitle){
-        WebElement inputFirstName = browser.findElement(By.id("firstname")) ;
+    public void fillInAddress (String firstName, String lastName, String address, String city, int zipCode, long homePhone, long mobilePhone, String addressTitle) {
+        WebElement inputFirstName = browser.findElement(By.id("firstname"));
         inputFirstName.sendKeys(firstName);
-        WebElement inputLastName = browser.findElement(By.id("lastname")) ;
+        WebElement inputLastName = browser.findElement(By.id("lastname"));
         inputLastName.sendKeys(lastName);
-        WebElement inputAddress = browser.findElement(By.id("address1")) ;
+        WebElement inputAddress = browser.findElement(By.id("address1"));
         inputAddress.sendKeys(address);
-        WebElement inputCity = browser.findElement(By.id("city")) ;
+        WebElement inputCity = browser.findElement(By.id("city"));
         inputCity.sendKeys(city);
-        WebElement inputZipCode = browser.findElement(By.id("postcode")) ;
+        WebElement inputZipCode = browser.findElement(By.id("postcode"));
         inputZipCode.sendKeys(String.valueOf(zipCode));
 
 
-        WebElement inputHomePhone = browser.findElement(By.id("phone")) ;
+        WebElement inputHomePhone = browser.findElement(By.id("phone"));
         inputHomePhone.sendKeys(String.valueOf(homePhone));
-        WebElement inputMobilePhone = browser.findElement(By.id("phone_mobile")) ;
+        WebElement inputMobilePhone = browser.findElement(By.id("phone_mobile"));
         inputMobilePhone.sendKeys(String.valueOf(mobilePhone));
-        WebElement inputAddressTitle = browser.findElement(By.id("alias")) ;
+        WebElement inputAddressTitle = browser.findElement(By.id("alias"));
         inputAddressTitle.sendKeys(addressTitle);
         WebElement buttonSave = browser.findElement(By.xpath("//span[contains(text(),'Save')]"));
         buttonSave.click();
         wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//span[contains(text(),'Guest Information')]")));
+    }
+
+        public void payment(){
         WebElement checkBoxAgreement = browser.findElement(By.id("cgv"));
         checkBoxAgreement.click();
         WebElement payment = browser.findElement(By.xpath("//a[@class='cheque']"));
@@ -263,6 +272,8 @@ public class TestsHeckathon {
         wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//span[contains(text(),'I confirm my order')]")));
         WebElement confirm = browser.findElement(By.xpath("//span[contains(text(),'I confirm my order')]"));
         confirm.click();
+
+
 
     }
 
